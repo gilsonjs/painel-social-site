@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meu Painel de Redes Sociais</title>
+    <style>
+        :root {
+            --cor-fundo: #0f0f0f;
+            --cor-cartao: #1a1a1a;
+            --cor-borda: #2a2a2a;
+            --cor-texto: #ffffff;
+            --cor-texto-fraco: #888888;
+            --cor-texto-muito-fraco: #555555;
+            --cor-azul: #3b82f6;
+            --cor-verde: #22c55e;
+            --cor-vermelho: #ef4444;
+        }
+        @media (prefers-color-scheme: light) {
+            :root {
+                --cor-fundo: #f5f5f5;
+                --cor-cartao: #ffffff;
+                --cor-borda: #e0e0e0;
+                --cor-texto: #111111;
+                --cor-texto-fraco: #555555;
+                --cor-texto-muito-fraco: #999999;
+            }
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--cor-fundo);
+            color: var(--cor-texto);
+            padding: 16px;
+            min-height: 100vh;
+        }
+        .container { max-width: 900px; margin: 0 auto; }
+        .cabecalho {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .titulo { font-size: 22px; font-weight: 600; }
+        .ao-vivo {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: var(--cor-verde);
+            font-weight: 500;
+        }
+        .bolinha {
+            width: 7px; height: 7px;
+            background: var(--cor-verde);
+            border-radius: 50%;
+            animation: pulsar 2s infinite;
+        }
+        @keyframes pulsar { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+        .atualizacao {
+            font-size: 11px;
+            color: var(--cor-texto-muito-fraco);
+        }
+        .abas {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+            border-bottom: 1px solid var(--cor-borda);
+            padding-bottom: 10px;
+            overflow-x: auto;
+        }
+        .aba {
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: none;
+            background: transparent;
+            color: var(--cor-texto-fraco);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .aba:hover { color: var(--cor-texto); }
+        .aba.ativa { color: var(--cor-texto); background: var(--cor-borda); }
+        .notificacao {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 16px; height: 16px;
+            border-radius: 50%;
+            background: var(--cor-vermelho);
+            color: white;
+            font-size: 9px;
+            margin-left: 4px;
+        }
+        .numeros {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+        @media (min-width: 768px) {
+            .numeros { grid-template-columns: repeat(4, 1fr); }
+        }
+        .cartao {
+            background: var(--cor-cartao);
+            border: 1px solid var(--cor-borda);
+            border-radius: 12px;
+            padding: 16px;
+        }
+        .cartao-titulo {
+            font-size: 11px;
+            color: var(--cor-texto-muito-fraco);
+            margin-bottom: 8px;
+        }
+        .cartao-numero {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            font-variant-numeric: tabular-nums;
+        }
+        .cartao-variacao { font-size: 11px; font-weight: 500; }
+        .cartao-variacao.subiu { color: var(--cor-verde); }
+        .cartao-variacao.caiu { color: var(--cor-vermelho); }
+        .conteudo {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+        @media (min-width: 768px) {
+            .conteudo { grid-template-columns: 2fr 1fr; }
+        }
+        .painel {
+            background: var(--cor-cartao);
+            border: 1px solid var(--cor-borda);
+            border-radius: 12px;
+            padding: 16px;
+        }
+        .painel-titulo {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .grafico-container { height: 180px; position: relative; }
+        .grafico-svg { width: 100%; height: 100%; }
+        .linha-grafico {
+            fill: none;
+            stroke-width: 2.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+        .area-grafico { opacity: 0.12; }
+        .grade-grafico {
+            stroke: var(--cor-borda);
+            stroke-width: 0.5;
+            stroke-dasharray: 4,4;
+        }
+        .ponto-grafico {
+            fill: var(--cor-cartao);
+            stroke-width: 2;
+            r: 4;
+        }
+        .feed-lista { display: flex; flex-direction: column; gap: 10px; }
+        .feed-item {
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid var(--cor-borda);
+            animation: entrar 0.4s ease-out;
+        }
+        .feed-item.novo {
+            border-color: var(--cor-azul);
+            background: rgba(59,130,246,0.04);
+        }
+        @keyframes entrar {
+            from { opacity: 0; transform: translateX(-10px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        .feed-cabecalho {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+        .feed-avatar {
+            width: 32px; height: 32px;
+            border-radius: 50%;
+            background: var(--cor-borda);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        .feed-autor { font-size: 13px; font-weight: 500; }
+        .feed-tempo { font-size: 10px; color: var(--cor-texto-muito-fraco); }
+        .feed-texto {
+            font-size: 12px;
+            line-height: 1.5;
+            color: var(--cor-texto-fraco);
+            margin-bottom: 8px;
+        }
+        .feed-stats {
+            display: flex;
+            gap: 12px;
+            font-size: 11px;
+            color: var(--cor-texto-muito-fraco);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="cabecalho">
+            <h1 class="titulo">📊 Painel Social</h1>
+            <div style="display:flex;align-items:center;gap:12px;">
+                <span class="ao-vivo"><span class="bolinha"></span>Ao vivo</span>
+                <span class="atualizacao">Atualizado há <span id="segundos">0</span>s</span>
+            </div>
+        </div>
+
+        <div class="abas" id="abas">
+            <button class="aba ativa" data-rede="twitter">🐦 Twitter/X<span class="notificacao" id="badge-twitter">3</span></button>
+            <button class="aba" data-rede="instagram">📸 Instagram<span class="notificacao" id="badge-instagram" style="display:none">0</span></button>
+            <button class="aba" data-rede="youtube">▶️ YouTube<span class="notificacao" id="badge-youtube" style="display:none">0</span></button>
+        </div>
+
+        <div class="numeros">
+            <div class="cartao">
+                <div class="cartao-titulo">👥 Seguidores</div>
+                <div class="cartao-numero" id="seguidores">24.5K</div>
+                <div class="cartao-variacao subiu" id="var-seguidores">▲ +2.4%</div>
+            </div>
+            <div class="cartao">
+                <div class="cartao-titulo">❤️ Curtidas</div>
+                <div class="cartao-numero" id="curtidas">1.2K</div>
+                <div class="cartao-variacao subiu" id="var-curtidas">▲ +12%</div>
+            </div>
+            <div class="cartao">
+                <div class="cartao-titulo">💬 Comentários</div>
+                <div class="cartao-numero" id="comentarios">342</div>
+                <div class="cartao-variacao subiu" id="var-comentarios">▲ +5.1%</div>
+            </div>
+            <div class="cartao">
+                <div class="cartao-titulo">🔄 Compartilhamentos</div>
+                <div class="cartao-numero" id="compartilhamentos">89</div>
+                <div class="cartao-variacao subiu" id="var-compartilhamentos">▲ +8.3%</div>
+            </div>
+        </div>
+
+        <div class="conteudo">
+            <div class="painel">
+                <div class="painel-titulo">
+                    <span>📈 Crescimento (7 dias)</span>
+                    <span>📊</span>
+                </div>
+                <div class="grafico-container">
+                    <svg class="grafico-svg" id="grafico" viewBox="0 0 400 180" preserveAspectRatio="none">
+                        <defs>
+                            <linearGradient id="gradArea" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stop-color="var(--cor-azul)" stop-opacity="0.3"/>
+                                <stop offset="100%" stop-color="var(--cor-azul)" stop-opacity="0"/>
+                            </linearGradient>
+                        </defs>
+                        <g id="grade"></g>
+                        <path id="area" class="area-grafico" fill="url(#gradArea)"/>
+                        <path id="linha" class="linha-grafico" stroke="var(--cor-azul)"/>
+                        <g id="pontos"></g>
+                    </svg>
+                </div>
+            </div>
+            <div class="painel">
+                <div class="painel-titulo">
+                    <span>🔔 Atividade recente</span>
+                    <span class="ao-vivo"><span class="bolinha"></span>Novo</span>
+                </div>
+                <div class="feed-lista" id="feed"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const redes = {
+            twitter: {
+                seguidores: 24500, curtidas: 1200, comentarios: 342, compartilhamentos: 89,
+                cor: "#3b82f6",
+                historico: [18000,19500,21000,20500,22000,23000,24500],
+                posts: [
+                    {autor:"TechDaily",avatar:"TD",texto:"Novo update do algoritmo promete revolucionar o feed...",tempo:"2m",curtidas:234,comentarios:45,compartilhamentos:12},
+                    {autor:"DesignHub",avatar:"DH",texto:"10 tendências de UI que você não pode ignorar em 2026",tempo:"15m",curtidas:189,comentarios:23,compartilhamentos:8},
+                    {autor:"CodeLife",avatar:"CL",texto:"Thread: como otimizar suas queries em 3 passos simples",tempo:"1h",curtidas:567,comentarios:89,compartilhamentos:45}
+                ]
+            },
+            instagram: {
+                seguidores: 45100, curtidas: 3400, comentarios: 156, compartilhamentos: 234,
+                cor: "#ef4444",
+                historico: [38000,39500,41000,40500,42000,43500,45100],
+                posts: [
+                    {autor:"fotografia_br",avatar:"FB",texto:"Golden hour em São Paulo 🌇 #photography",tempo:"5m",curtidas:1203,comentarios:34,compartilhamentos:12},
+                    {autor:"foodie_rj",avatar:"FR",texto:"Receita de hoje: risoto de limão siciliano",tempo:"32m",curtidas:892,comentarios:56,compartilhamentos:8},
+                    {autor:"travel.world",avatar:"TW",texto:"Patagônia é surreal 😍",tempo:"2h",curtidas:2341,comentarios:89,compartilhamentos:45}
+                ]
+            },
+            youtube: {
+                seguidores: 128000, curtidas: 5600, comentarios: 890, compartilhamentos: 120,
+                cor: "#22c55e",
+                historico: [110000,115000,118000,120000,122000,125000,128000],
+                posts: [
+                    {autor:"CanalTech",avatar:"CT",texto:"Review completo: o novo
