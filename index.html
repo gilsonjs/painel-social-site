@@ -1,516 +1,2450 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Meu Painel de Redes Sociais</title>
-<style>
-:root {
-  --fundo: #0f0f0f;
-  --cartao: #1a1a1a;
-  --borda: #2a2a2a;
-  --texto: #ffffff;
-  --texto2: #888888;
-  --texto3: #555555;
-  --azul: #3b82f6;
-  --verde: #22c55e;
-  --vermelho: #ef4444;
-}
-@media (prefers-color-scheme: light) {
-  :root {
-    --fundo: #f5f5f5;
-    --cartao: #ffffff;
-    --borda: #e0e0e0;
-    --texto: #111111;
-    --texto2: #555555;
-    --texto3: #999999;
-  }
-}
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background: var(--fundo);
-  color: var(--texto);
-  padding: 16px;
-  min-height: 100vh;
-}
-.container { max-width: 900px; margin: 0 auto; }
-.cabecalho {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-.titulo { font-size: 22px; font-weight: 600; }
-.ao-vivo {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 12px;
-  color: var(--verde);
-  font-weight: 500;
-}
-.bolinha {
-  width: 8px; height: 8px;
-  background: var(--verde);
-  border-radius: 50%;
-  animation: pulsar 2s infinite;
-}
-@keyframes pulsar { 0%,100%{opacity:1} 50%{opacity:0.3} }
-.atualizacao { font-size: 11px; color: var(--texto3); }
-.abas {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 16px;
-  border-bottom: 1px solid var(--borda);
-  padding-bottom: 10px;
-  overflow-x: auto;
-}
-.aba-btn {
-  padding: 10px 18px;
-  border-radius: 8px;
-  border: 1px solid var(--borda);
-  background: var(--cartao);
-  color: var(--texto2);
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s;
-  white-space: nowrap;
-  -webkit-tap-highlight-color: rgba(59,130,246,0.2);
-  min-height: 44px;
-}
-.aba-btn:hover, .aba-btn:active {
-  color: var(--texto);
-  border-color: var(--azul);
-}
-.aba-btn.ativa {
-  color: var(--texto);
-  background: var(--borda);
-  border-color: var(--azul);
-}
-.notificacao {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 18px; height: 18px;
-  border-radius: 50%;
-  background: var(--vermelho);
-  color: white;
-  font-size: 10px;
-  margin-left: 4px;
-}
-.numeros {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
-  margin-bottom: 16px;
-}
-@media(min-width:768px){ .numeros{ grid-template-columns: repeat(4,1fr); } }
-.cartao {
-  background: var(--cartao);
-  border: 1px solid var(--borda);
-  border-radius: 12px;
-  padding: 16px;
-}
-.cartao-titulo {
-  font-size: 11px;
-  color: var(--texto3);
-  margin-bottom: 8px;
-}
-.cartao-numero {
-  font-size: 28px;
-  font-weight: 600;
-  margin-bottom: 4px;
-  font-variant-numeric: tabular-nums;
-}
-.cartao-variacao { font-size: 11px; font-weight: 500; }
-.subiu { color: var(--verde); }
-.caiu { color: var(--vermelho); }
-.conteudo {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 12px;
-}
-@media(min-width:768px){ .conteudo{ grid-template-columns: 2fr 1fr; } }
-.painel {
-  background: var(--cartao);
-  border: 1px solid var(--borda);
-  border-radius: 12px;
-  padding: 16px;
-}
-.painel-titulo {
-  font-size: 14px;
-  font-weight: 500;
-  margin-bottom: 12px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.grafico-container { height: 180px; position: relative; }
-.grafico-svg { width: 100%; height: 100%; }
-.linha-grafico {
-  fill: none;
-  stroke-width: 2.5;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-.area-grafico { opacity: 0.12; }
-.grade-grafico {
-  stroke: var(--borda);
-  stroke-width: 0.5;
-  stroke-dasharray: 4,4;
-}
-.ponto-grafico {
-  fill: var(--cartao);
-  stroke-width: 2;
-  r: 4;
-}
-.feed-lista { display: flex; flex-direction: column; gap: 10px; }
-.feed-item {
-  padding: 12px;
-  border-radius: 10px;
-  border: 1px solid var(--borda);
-  animation: entrar 0.4s ease-out;
-}
-.feed-item.novo {
-  border-color: var(--azul);
-  background: rgba(59,130,246,0.04);
-}
-@keyframes entrar {
-  from { opacity: 0; transform: translateX(-10px); }
-  to { opacity: 1; transform: translateX(0); }
-}
-.feed-cabecalho {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 6px;
-}
-.feed-avatar {
-  width: 32px; height: 32px;
-  border-radius: 50%;
-  background: var(--borda);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 11px;
-  font-weight: 600;
-}
-.feed-autor { font-size: 13px; font-weight: 500; }
-.feed-tempo { font-size: 10px; color: var(--texto3); }
-.feed-texto {
-  font-size: 12px;
-  line-height: 1.5;
-  color: var(--texto2);
-  margin-bottom: 8px;
-}
-.feed-stats {
-  display: flex;
-  gap: 12px;
-  font-size: 11px;
-  color: var(--texto3);
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Gilson Silva (Gito Poeta) - Poeta, letrista, compositor e agitador cultural de Pernambuco. Mais de 30 anos dedicados à cultura popular, frevo, literatura e patrimônio imaterial.">
+    <meta name="keywords" content="Gito Poeta, Gilson Silva, cultura popular, frevo, poesia, Pernambuco, carnaval, bloco lírico, Rosas da Boa Vista, literatura">
+    <meta name="author" content="Gilson José da Silva">
+    <title>Gito Poeta | Gilson Silva - Poeta, Compositor e Agitador Cultural</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Poppins:wght@300;400;500;600;700&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --vermelho: #c8102e;
+            --amarelo: #f7d117;
+            --azul: #0072ce;
+            --verde: #00a651;
+            --laranja: #f57c00;
+            --roxo: #7b1fa2;
+            --rosa: #e91e63;
+            --fundo: #0a0a14;
+            --fundo2: #12121f;
+            --fundo3: #1a1a2e;
+            --texto: #f0f0f0;
+            --texto2: #b0b0c0;
+            --texto3: #808090;
+            --borda: rgba(255,255,255,0.08);
+            --gradiente1: linear-gradient(135deg, #c8102e, #f57c00, #f7d117);
+            --gradiente2: linear-gradient(135deg, #0072ce, #00a651);
+            --gradiente3: linear-gradient(135deg, #7b1fa2, #e91e63);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 80px;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--fundo);
+            color: var(--texto);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        /* ===== SCROLLBAR ===== */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--fundo2);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--vermelho);
+            border-radius: 5px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--amarelo);
+        }
+
+        /* ===== SELEÇÃO ===== */
+        ::selection {
+            background: var(--amarelo);
+            color: #000;
+        }
+
+        /* ===== HEADER ===== */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.4s ease;
+            background: transparent;
+        }
+
+        header.scrolled {
+            background: rgba(10, 10, 20, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 10px 40px;
+            box-shadow: 0 4px 30px rgba(0,0,0,0.5);
+            border-bottom: 1px solid var(--borda);
+        }
+
+        .logo {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2rem;
+            color: var(--amarelo);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: transform 0.3s;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        .logo i {
+            font-size: 1.5rem;
+            color: var(--vermelho);
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        nav a {
+            color: var(--texto2);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--amarelo);
+            transition: width 0.3s;
+        }
+
+        nav a:hover {
+            color: var(--amarelo);
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--texto);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* ===== HERO ===== */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            background: var(--fundo);
+            padding: 120px 40px 80px;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 80%;
+            height: 150%;
+            background: radial-gradient(circle, rgba(200, 16, 46, 0.15) 0%, transparent 70%);
+            animation: pulse 8s ease-in-out infinite;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -10%;
+            width: 60%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(247, 209, 23, 0.08) 0%, transparent 70%);
+            animation: pulse 10s ease-in-out infinite reverse;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.2); opacity: 1; }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            max-width: 900px;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 8px 20px;
+            border: 1px solid var(--amarelo);
+            border-radius: 50px;
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--amarelo);
+            margin-bottom: 30px;
+            animation: fadeInUp 1s ease;
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            animation: fadeInUp 1s ease 0.2s both;
+        }
+
+        .hero h1 .destaque {
+            background: var(--gradiente1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero .subtitulo {
+            font-size: clamp(1rem, 2.5vw, 1.3rem);
+            color: var(--texto2);
+            font-weight: 300;
+            max-width: 700px;
+            margin: 0 auto 40px;
+            animation: fadeInUp 1s ease 0.4s both;
+        }
+
+        .hero .subtitulo strong {
+            color: var(--amarelo);
+            font-weight: 600;
+        }
+
+        .hero-botoes {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeInUp 1s ease 0.6s both;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 32px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .btn-primary {
+            background: var(--gradiente1);
+            color: #fff;
+            box-shadow: 0 8px 30px rgba(200, 16, 46, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px rgba(200, 16, 46, 0.6);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--texto);
+            border: 2px solid rgba(255,255,255,0.2);
+        }
+
+        .btn-outline:hover {
+            border-color: var(--amarelo);
+            color: var(--amarelo);
+            transform: translateY(-3px);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ===== SEÇÕES ===== */
+        section {
+            padding: 100px 40px;
+            position: relative;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 70px;
+        }
+
+        .section-header .tag {
+            display: inline-block;
+            font-size: 0.75rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--amarelo);
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .section-header h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 5vw, 3.2rem);
+            font-weight: 700;
+            margin-bottom: 15px;
+            line-height: 1.2;
+        }
+
+        .section-header p {
+            color: var(--texto2);
+            max-width: 600px;
+            margin: 0 auto;
+            font-weight: 300;
+        }
+
+        .divisor {
+            width: 60px;
+            height: 3px;
+            background: var(--gradiente1);
+            margin: 20px auto;
+            border-radius: 2px;
+        }
+
+        /* ===== SOBRE ===== */
+        .sobre {
+            background: var(--fundo2);
+        }
+
+        .sobre-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .sobre-imagem {
+            position: relative;
+        }
+
+        .sobre-imagem .moldura {
+            width: 100%;
+            aspect-ratio: 3/4;
+            border-radius: 20px;
+            background: var(--gradiente2);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .sobre-imagem .moldura i {
+            font-size: 8rem;
+            color: rgba(255,255,255,0.15);
+        }
+
+        .sobre-imagem .moldura::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(10,10,20,0.8), transparent 50%);
+        }
+
+        .sobre-imagem .experiencia {
+            position: absolute;
+            bottom: -20px;
+            right: -20px;
+            background: var(--gradiente1);
+            padding: 20px 30px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(200, 16, 46, 0.4);
+        }
+
+        .sobre-imagem .experiencia .numero {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            line-height: 1;
+            color: #fff;
+        }
+
+        .sobre-imagem .experiencia .label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: rgba(255,255,255,0.9);
+        }
+
+        .sobre-texto h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: var(--amarelo);
+        }
+
+        .sobre-texto p {
+            color: var(--texto2);
+            margin-bottom: 20px;
+            font-weight: 300;
+        }
+
+        .sobre-texto .destaque-texto {
+            color: var(--texto);
+            font-weight: 400;
+            border-left: 3px solid var(--vermelho);
+            padding-left: 20px;
+            font-style: italic;
+        }
+
+        .sobre-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        .sobre-tags span {
+            padding: 8px 18px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--borda);
+            border-radius: 50px;
+            font-size: 0.8rem;
+            color: var(--texto2);
+            transition: all 0.3s;
+        }
+
+        .sobre-tags span:hover {
+            border-color: var(--amarelo);
+            color: var(--amarelo);
+            background: rgba(247, 209, 23, 0.05);
+        }
+
+        /* ===== NÚMEROS ===== */
+        .numeros {
+            background: var(--fundo);
+            padding: 60px 40px;
+        }
+
+        .numeros-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .numero-item {
+            text-align: center;
+            padding: 30px 20px;
+            border-radius: 15px;
+            background: var(--fundo2);
+            border: 1px solid var(--borda);
+            transition: all 0.3s;
+        }
+
+        .numero-item:hover {
+            transform: translateY(-5px);
+            border-color: var(--amarelo);
+            box-shadow: 0 10px 30px rgba(247, 209, 23, 0.1);
+        }
+
+        .numero-item i {
+            font-size: 2rem;
+            color: var(--amarelo);
+            margin-bottom: 15px;
+        }
+
+        .numero-item .num {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--texto);
+            line-height: 1;
+        }
+
+        .numero-item .desc {
+            font-size: 0.85rem;
+            color: var(--texto3);
+            margin-top: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* ===== TRAJETÓRIA ===== */
+        .trajetoria {
+            background: var(--fundo2);
+        }
+
+        .timeline {
+            position: relative;
+            max-width: 900px;
+            margin: 0 auto;
+            padding-left: 40px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--vermelho), var(--amarelo), var(--azul), var(--verde));
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 50px;
+            padding-left: 30px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -46px;
+            top: 5px;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: var(--amarelo);
+            border: 3px solid var(--fundo2);
+            box-shadow: 0 0 0 3px var(--amarelo);
+        }
+
+        .timeline-item .ano {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--amarelo);
+            margin-bottom: 5px;
+        }
+
+        .timeline-item h4 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--texto);
+        }
+
+        .timeline-item p {
+            color: var(--texto2);
+            font-size: 0.95rem;
+            font-weight: 300;
+        }
+
+        /* ===== MÚSICA ===== */
+        .musica {
+            background: var(--fundo);
+        }
+
+        .cd-destaque {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+            margin-bottom: 80px;
+        }
+
+        .cd-capa {
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            transition: transform 0.5s;
+        }
+
+        .cd-capa:hover {
+            transform: scale(1.02);
+        }
+
+        .cd-capa .capa-placeholder {
+            width: 100%;
+            aspect-ratio: 1;
+            background: linear-gradient(135deg, #1a0a00, #331a00, #1a0a00);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cd-capa .capa-placeholder::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: repeating-conic-gradient(
+                from 0deg,
+                rgba(247, 209, 23, 0.03) 0deg 10deg,
+                transparent 10deg 20deg
+            );
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .cd-capa .capa-placeholder i {
+            font-size: 5rem;
+            color: var(--amarelo);
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cd-capa .capa-placeholder .titulo-cd {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            color: var(--amarelo);
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            padding: 0 20px;
+        }
+
+        .cd-capa .capa-placeholder .subtitulo-cd {
+            font-size: 0.9rem;
+            color: var(--texto2);
+            margin-top: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cd-info h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: var(--amarelo);
+        }
+
+        .cd-info p {
+            color: var(--texto2);
+            margin-bottom: 20px;
+            font-weight: 300;
+        }
+
+        .faixas {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .faixa {
+            padding: 10px 20px;
+            background: rgba(247, 209, 23, 0.08);
+            border: 1px solid rgba(247, 209, 23, 0.2);
+            border-radius: 10px;
+            font-size: 0.85rem;
+            color: var(--amarelo);
+            transition: all 0.3s;
+        }
+
+        .faixa:hover {
+            background: rgba(247, 209, 23, 0.15);
+            border-color: var(--amarelo);
+            transform: translateX(5px);
+        }
+
+        .faixa i {
+            margin-right: 8px;
+            font-size: 0.75rem;
+        }
+
+        /* ===== BLOCOS ===== */
+        .blocos {
+            background: var(--fundo2);
+        }
+
+        .blocos-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+
+        .bloco-card {
+            background: var(--fundo3);
+            border-radius: 20px;
+            padding: 40px;
+            border: 1px solid var(--borda);
+            transition: all 0.4s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .bloco-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--gradiente1);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s;
+        }
+
+        .bloco-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .bloco-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+        }
+
+        .bloco-card .icone {
+            width: 70px;
+            height: 70px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+            color: #fff;
+        }
+
+        .bloco-card .icone.vermelho {
+            background: var(--gradiente1);
+        }
+
+        .bloco-card .icone.azul {
+            background: var(--gradiente2);
+        }
+
+        .bloco-card .icone.roxo {
+            background: var(--gradiente3);
+        }
+
+        .bloco-card h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--texto);
+        }
+
+        .bloco-card p {
+            color: var(--texto2);
+            font-size: 0.95rem;
+            font-weight: 300;
+            margin-bottom: 20px;
+        }
+
+        .bloco-card .detalhes {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            font-size: 0.8rem;
+            color: var(--texto3);
+        }
+
+        .bloco-card .detalhes span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .bloco-card .detalhes i {
+            color: var(--amarelo);
+        }
+
+        /* ===== LITERATURA ===== */
+        .literatura {
+            background: var(--fundo);
+        }
+
+        .poemas-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+        }
+
+        .poema-card {
+            background: var(--fundo2);
+            border-radius: 20px;
+            padding: 40px;
+            border: 1px solid var(--borda);
+            transition: all 0.4s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .poema-card::after {
+            content: '"';
+            position: absolute;
+            top: 10px;
+            right: 25px;
+            font-family: 'Playfair Display', serif;
+            font-size: 8rem;
+            color: rgba(247, 209, 23, 0.05);
+            line-height: 1;
+            pointer-events: none;
+        }
+
+        .poema-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(247, 209, 23, 0.3);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+        }
+
+        .poema-card .titulo-poema {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            color: var(--amarelo);
+            margin-bottom: 5px;
+        }
+
+        .poema-card .autor-poema {
+            font-size: 0.8rem;
+            color: var(--texto3);
+            margin-bottom: 25px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .poema-card .verso {
+            font-family: 'Playfair Display', serif;
+            font-size: 1rem;
+            line-height: 2;
+            color: var(--texto2);
+            font-style: italic;
+            white-space: pre-line;
+        }
+
+        .poema-card .verso strong {
+            color: var(--amarelo);
+            font-style: normal;
+        }
+
+        .poema-card .data-poema {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid var(--borda);
+            font-size: 0.8rem;
+            color: var(--texto3);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .poema-card .data-poema i {
+            color: var(--vermelho);
+        }
+
+        /* ===== LIVRO ===== */
+        .livro {
+            background: var(--fundo2);
+        }
+
+        .livro-destaque {
+            display: grid;
+            grid-template-columns: 1fr 1.3fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .livro-capa {
+            position: relative;
+        }
+
+        .livro-capa .capa-livro {
+            width: 100%;
+            aspect-ratio: 2/3;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #2a1a0a, #4a2a10, #2a1a0a);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(247, 209, 23, 0.2);
+        }
+
+        .livro-capa .capa-livro::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(247, 209, 23, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(200, 16, 46, 0.1) 0%, transparent 50%);
+        }
+
+        .livro-capa .capa-livro .titulo-livro {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            color: var(--amarelo);
+            text-align: center;
+            padding: 0 30px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .livro-capa .capa-livro .subtitulo-livro {
+            font-size: 0.9rem;
+            color: var(--texto2);
+            margin-top: 15px;
+            text-align: center;
+            padding: 0 30px;
+            position: relative;
+            z-index: 1;
+            font-style: italic;
+        }
+
+        .livro-capa .capa-livro .editora {
+            position: absolute;
+            bottom: 30px;
+            font-size: 0.75rem;
+            color: var(--texto3);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            z-index: 1;
+        }
+
+        .livro-capa .selo {
+            position: absolute;
+            top: -15px;
+            right: -15px;
+            background: var(--gradiente1);
+            color: #fff;
+            padding: 12px 20px;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 5px 20px rgba(200, 16, 46, 0.4);
+            z-index: 2;
+        }
+
+        .livro-info h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            color: var(--amarelo);
+            margin-bottom: 20px;
+        }
+
+        .livro-info p {
+            color: var(--texto2);
+            margin-bottom: 20px;
+            font-weight: 300;
+        }
+
+        .livro-info .sinopse {
+            background: var(--fundo3);
+            padding: 25px;
+            border-radius: 15px;
+            border-left: 3px solid var(--vermelho);
+            margin-bottom: 25px;
+        }
+
+        .livro-info .sinopse p {
+            margin-bottom: 0;
+            font-style: italic;
+            color: var(--texto);
+        }
+
+        .livro-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 25px;
+        }
+
+        .livro-meta .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.85rem;
+            color: var(--texto3);
+        }
+
+        .livro-meta .meta-item i {
+            color: var(--amarelo);
+            font-size: 1rem;
+        }
+
+        /* ===== REDES SOCIAIS ===== */
+        .redes {
+            background: var(--fundo);
+        }
+
+        .redes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+        }
+
+        .rede-card {
+            background: var(--fundo2);
+            border-radius: 20px;
+            padding: 35px 30px;
+            text-align: center;
+            border: 1px solid var(--borda);
+            transition: all 0.4s;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .rede-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            transform: scaleX(0);
+            transition: transform 0.4s;
+        }
+
+        .rede-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .rede-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+            border-color: transparent;
+        }
+
+        .rede-card.youtube::before { background: #ff0000; }
+        .rede-card.tiktok::before { background: #00f2ea; }
+        .rede-card.facebook::before { background: #1877f2; }
+        .rede-card.instagram::before { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); }
+
+        .rede-card .rede-icone {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            margin: 0 auto 20px;
+            transition: transform 0.3s;
+        }
+
+        .rede-card:hover .rede-icone {
+            transform: scale(1.1);
+        }
+
+        .rede-card.youtube .rede-icone { background: rgba(255,0,0,0.15); color: #ff0000; }
+        .rede-card.tiktok .rede-icone { background: rgba(0,242,234,0.15); color: #00f2ea; }
+        .rede-card.facebook .rede-icone { background: rgba(24,119,242,0.15); color: #1877f2; }
+        .rede-card.instagram .rede-icone { background: rgba(225,48,108,0.15); color: #e1306c; }
+
+        .rede-card h4 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .rede-card .handle {
+            font-size: 0.8rem;
+            color: var(--texto3);
+            margin-bottom: 15px;
+        }
+
+        .rede-card .stats {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            font-size: 0.8rem;
+            color: var(--texto2);
+        }
+
+        .rede-card .stats span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .rede-card .stats i {
+            font-size: 0.7rem;
+            color: var(--texto3);
+        }
+
+        /* ===== RÁDIO ===== */
+        .radio {
+            background: var(--fundo2);
+        }
+
+        .radio-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+            background: var(--fundo3);
+            border-radius: 30px;
+            padding: 60px;
+            border: 1px solid var(--borda);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .radio-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -30%;
+            width: 80%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(0, 114, 206, 0.08) 0%, transparent 70%);
+        }
+
+        .radio-info h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            color: var(--amarelo);
+            margin-bottom: 20px;
+        }
+
+        .radio-info p {
+            color: var(--texto2);
+            margin-bottom: 25px;
+            font-weight: 300;
+        }
+
+        .radio-player {
+            background: var(--fundo);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            border: 1px solid var(--borda);
+            position: relative;
+            z-index: 1;
+        }
+
+        .radio-player .radio-logo {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: var(--gradiente2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 2.5rem;
+            color: #fff;
+            animation: pulseRadio 3s ease-in-out infinite;
+        }
+
+        @keyframes pulseRadio {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(0, 166, 81, 0.4); }
+            50% { box-shadow: 0 0 0 20px rgba(0, 166, 81, 0); }
+        }
+
+        .radio-player h4 {
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+
+        .radio-player .frequencia {
+            font-size: 0.85rem;
+            color: var(--texto3);
+            margin-bottom: 20px;
+        }
+
+        .radio-player .btn-radio {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 35px;
+            background: var(--gradiente2);
+            color: #fff;
+            border: none;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .radio-player .btn-radio:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(0, 166, 81, 0.4);
+        }
+
+        /* ===== CONTATO ===== */
+        .contato {
+            background: var(--fundo);
+        }
+
+        .contato-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 60px;
+        }
+
+        .contato-info h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            color: var(--amarelo);
+            margin-bottom: 20px;
+        }
+
+        .contato-info p {
+            color: var(--texto2);
+            margin-bottom: 30px;
+            font-weight: 300;
+        }
+
+        .contato-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .contato-item .icone-contato {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            background: rgba(247, 209, 23, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--amarelo);
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .contato-item .texto-contato h4 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 3px;
+        }
+
+        .contato-item .texto-contato p {
+            font-size: 0.85rem;
+            color: var(--texto3);
+            margin: 0;
+        }
+
+        .contato-form {
+            background: var(--fundo2);
+            padding: 40px;
+            border-radius: 20px;
+            border: 1px solid var(--borda);
+        }
+
+        .contato-form .campo {
+            margin-bottom: 20px;
+        }
+
+        .contato-form label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: var(--texto2);
+        }
+
+        .contato-form input,
+        .contato-form textarea {
+            width: 100%;
+            padding: 14px 18px;
+            background: var(--fundo);
+            border: 1px solid var(--borda);
+            border-radius: 12px;
+            color: var(--texto);
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+            outline: none;
+        }
+
+        .contato-form input:focus,
+        .contato-form textarea:focus {
+            border-color: var(--amarelo);
+            box-shadow: 0 0 0 3px rgba(247, 209, 23, 0.1);
+        }
+
+        .contato-form textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .contato-form .btn-enviar {
+            width: 100%;
+            padding: 16px;
+            background: var(--gradiente1);
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .contato-form .btn-enviar:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(200, 16, 46, 0.4);
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            background: var(--fundo2);
+            padding: 60px 40px 30px;
+            border-top: 1px solid var(--borda);
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 50px;
+            max-width: 1200px;
+            margin: 0 auto 40px;
+        }
+
+        .footer-sobre .logo {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            display: inline-flex;
+        }
+
+        .footer-sobre p {
+            color: var(--texto3);
+            font-size: 0.9rem;
+            font-weight: 300;
+            max-width: 350px;
+        }
+
+        .footer-col h4 {
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--amarelo);
+            margin-bottom: 20px;
+        }
+
+        .footer-col a {
+            display: block;
+            color: var(--texto3);
+            text-decoration: none;
+            font-size: 0.85rem;
+            margin-bottom: 12px;
+            transition: color 0.3s;
+        }
+
+        .footer-col a:hover {
+            color: var(--amarelo);
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .footer-social a {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--texto2);
+            font-size: 1rem;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+
+        .footer-social a:hover {
+            background: var(--amarelo);
+            color: #000;
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid var(--borda);
+            font-size: 0.8rem;
+            color: var(--texto3);
+        }
+
+        .footer-bottom strong {
+            color: var(--amarelo);
+        }
+
+        /* ===== VOLTAR AO TOPO ===== */
+        .voltar-topo {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--gradiente1);
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s;
+            z-index: 999;
+            box-shadow: 0 5px 20px rgba(200, 16, 46, 0.4);
+        }
+
+        .voltar-topo.visivel {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .voltar-topo:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(200, 16, 46, 0.6);
+        }
+
+        /* ===== ANIMAÇÕES DE SCROLL ===== */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .reveal.ativo {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ===== RESPONSIVO ===== */
+        @media (max-width: 1024px) {
+            .sobre-grid {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            .sobre-imagem {
+                max-width: 400px;
+                margin: 0 auto;
+            }
+
+            .cd-destaque {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            .blocos-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .livro-destaque {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            .livro-capa {
+                max-width: 350px;
+                margin: 0 auto;
+            }
+
+            .radio-container {
+                grid-template-columns: 1fr;
+                gap: 40px;
+                padding: 40px;
+            }
+
+            .contato-grid {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            header {
+                padding: 15px 20px;
+            }
+
+            header.scrolled {
+                padding: 10px 20px;
+            }
+
+            nav {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 280px;
+                height: 100vh;
+                background: var(--fundo2);
+                flex-direction: column;
+                justify-content: center;
+                gap: 25px;
+                transition: right 0.4s ease;
+                border-left: 1px solid var(--borda);
+                padding: 40px;
+            }
+
+            nav.aberto {
+                right: 0;
+            }
+
+            nav a {
+                font-size: 1rem;
+            }
+
+            .menu-toggle {
+                display: block;
+                z-index: 1001;
+            }
+
+            section {
+                padding: 70px 20px;
+            }
+
+            .hero {
+                padding: 100px 20px 60px;
+            }
+
+            .numeros-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+            }
+
+            .numero-item {
+                padding: 20px 15px;
+            }
+
+            .numero-item .num {
+                font-size: 1.8rem;
+            }
+
+            .poemas-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .redes-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+            .radio-container {
+                padding: 30px 20px;
+            }
+
+            .contato-form {
+                padding: 25px;
+            }
+
+            .voltar-topo {
+                bottom: 20px;
+                right: 20px;
+                width: 45px;
+                height: 45px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-botoes {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .numeros-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .timeline {
+                padding-left: 20px;
+            }
+
+            .timeline-item {
+                padding-left: 20px;
+            }
+
+            .timeline-item::before {
+                left: -26px;
+            }
+        }
+    </style>
 </head>
 <body>
-<div class="container">
-  <div class="cabecalho">
-    <h1 class="titulo">📊 Painel Social</h1>
-    <div style="display:flex;align-items:center;gap:12px;">
-      <span class="ao-vivo"><span class="bolinha"></span>Ao vivo</span>
-      <span class="atualizacao">Atualizado há <span id="segundos">0</span>s</span>
-    </div>
-  </div>
 
-  <div class="abas" id="abas">
-    <button class="aba-btn ativa" onclick="trocarRede('twitter')" type="button">
-      🐦 Twitter/X<span class="notificacao" id="badge-twitter">3</span>
+    <!-- ===== HEADER ===== -->
+    <header id="header">
+        <a href="#" class="logo">
+            <i class="fas fa-feather-alt"></i>
+            Gito Poeta
+        </a>
+        <nav id="nav">
+            <a href="#sobre">Sobre</a>
+            <a href="#trajetoria">Trajetória</a>
+            <a href="#musica">Música</a>
+            <a href="#blocos">Blocos</a>
+            <a href="#literatura">Literatura</a>
+            <a href="#livro">Livro</a>
+            <a href="#redes">Redes</a>
+            <a href="#radio">Rádio</a>
+            <a href="#contato">Contato</a>
+        </nav>
+        <button class="menu-toggle" id="menuToggle" aria-label="Abrir menu">
+            <i class="fas fa-bars"></i>
+        </button>
+    </header>
+
+    <!-- ===== HERO ===== -->
+    <section class="hero" id="inicio">
+        <div class="hero-content">
+            <span class="hero-badge">✦ Cultura Popular Pernambucana ✦</span>
+            <h1>
+                Gilson Silva<br>
+                <span class="destaque">Gito Poeta</span>
+            </h1>
+            <p class="subtitulo">
+                Poeta, letrista, compositor e agitador cultural. Há mais de <strong>30 anos</strong> 
+                dedicado à preservação e difusão da cultura popular, do frevo de bloco, 
+                da literatura e do patrimônio imaterial de Pernambuco.
+            </p>
+            <div class="hero-botoes">
+                <a href="#sobre" class="btn btn-primary">
+                    <i class="fas fa-user"></i> Conheça minha história
+                </a>
+                <a href="#literatura" class="btn btn-outline">
+                    <i class="fas fa-book-open"></i> Ler poesias
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== NÚMEROS ===== -->
+    <section class="numeros">
+        <div class="container">
+            <div class="numeros-grid">
+                <div class="numero-item reveal">
+                    <i class="fas fa-clock"></i>
+                    <div class="num">30+</div>
+                    <div class="desc">Anos de trajetória</div>
+                </div>
+                <div class="numero-item reveal">
+                    <i class="fas fa-music"></i>
+                    <div class="num">27</div>
+                    <div class="desc">Faixas no CD Locomotiva</div>
+                </div>
+                <div class="numero-item reveal">
+                    <i class="fas fa-users"></i>
+                    <div class="num">22,7 mil</div>
+                    <div class="desc">Seguidores no TikTok</div>
+                </div>
+                <div class="numero-item reveal">
+                    <i class="fas fa-heart"></i>
+                    <div class="num">255 mil</div>
+                    <div class="desc">Curtidas no TikTok</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== SOBRE ===== -->
+    <section class="sobre" id="sobre">
+        <div class="container">
+            <div class="section-header reveal">
+                <span class="tag">Biografia</span>
+                <h2>Sobre <span style="color: var(--amarelo);">Gito Poeta</span></h2>
+                <div class="divisor"></div>
+            </div>
+            <div class="sobre-grid">
+                <div class="sobre-imagem reveal">
+                    <div class="moldura">
+                        <i class="fas fa-user-circle"></i>
+                    </div>
+                    <div class="experiencia">
+                        <div class="numero">30+</div>
+                        <div class="label">Anos de cultura</div>
+                    </div>
+                </div>
+                <div class="sobre-texto reveal">
+                    <h3>Poeta, compositor e agitador cultural</h3>
+                    <p>
+                        <strong>Gilson José da Silva</strong>, conhecido artisticamente como 
+                        <strong>Gito Poeta</strong>, é um poeta, letrista, compositor e agitador 
+                        cultural nativo de Pernambuco. Há mais de três décadas atua ativamente 
+                        na preservação e difusão da cultura popular.
+                    </p>
+                    <p class="destaque-texto">
+                        "A cultura se defende assim, nas ruas!"
+                    </p>
+                    <p>
+                        É cofundador do <strong>Bloco Lírico Rosas da Boa Vista</strong>, contribuindo 
+                        para a salvaguarda do frevo de bloco, das serenatas e do carnaval tradicional 
+                        de rua. Como compositor, tem obras gravadas em diversos ritmos nordestinos, 
+                        incluindo registro histórico em disco do <strong>Maestro Nunes</strong>, além de 
+                        obras disponibilizadas em plataformas digitais de streaming.
+                    </p>
+                    <p>
+                        Sua atuação abrange a literatura, com produção poética e cordéis ao longo 
+                        de mais de 30 anos, a música popular nordestina, e a preservação do 
+                        patrimônio imaterial, através da organização de encontros de blocos líricos, 
+                        serenatas e apresentações de rua.
+                    </p>
+                    <div class="sobre-tags">
+                        <span>Literatura</span>
+                        <span>Música Popular</span>
+                        <span>Patrimônio Imaterial</span>
+                        <span>Frevo de Bloco</span>
+                        <span>Carnaval Tradicional</span>
+                        <span>Poesia</span>
+                        <span>Cordel</span>
+                        <span>Artes Visuais</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== TRAJETÓRIA ===== -->
+    <section class="trajetoria" id="trajetoria">
+        <div class="container">
+            <div class="section-header reveal">
+                <span class="tag">Linha do Tempo</span>
+                <h2>Principais <span style="color: var(--amarelo);">Realizações</span></h2>
+                <div class="divisor"></div>
+                <p>Uma trajetória construída com dedicação à cultura popular pernambucana</p>
+            </div>
+            <div class="timeline">
+                <div class="timeline-item reveal">
+                    <div class="ano">2002</div>
+                    <h4>Participação no CD "Locomotiva do Frevo - Vol. 2"</h4>
+                    <p>Registro histórico de suas composições "Bêbado Teimoso" (faixa 06) e "Deus Negro do Frevo" (faixa 19) no disco do Maestro Nunes, com capa e projeto visual de sua autoria.</p>
+                </div>
+                <div class="timeline-item reveal">
+                    <div class="ano">2002</div>
+                    <h4>Certificado de "Destaque" - Bloco Carnavalesco Zas em Folia</h4>
+                    <p>Reconhecimento conferido durante o Carnaval do Recife, assinado pelo presidente e produtor cultural Adilson Rocha, pela trajetória e atuação contínua na cultura popular.</p>
+                </div>
+                <div class="timeline-item reveal">
+                    <div class="ano">2003</div>
+                    <h4>Fundação do Bloco Lírico Rosas da Boa Vista</h4>
+                    <p>Cofundador do bloco que se tornou referência na salvaguarda do frevo de bloco, das serenatas e do carnaval tradicional de rua em Pernambuco.</p>
+                </div>
+                <div class="timeline-item reveal">
+                    <div class="ano">2012</div>
+                    <h4>Criação da Troça Carnavalesca Mista Só Lamento</h4>
+                    <p>Fundador da agremiação ao lado de familiares, com boneco gigante e estandarte confeccionados por ele, atuando como artesão, carnavalesco e líder comunitário.</p>
+                </div>
+                <div class="timeline-item reveal">
+                    <div class="ano">2012</div>
+                    <h4>Participação na Quinta Poética - Olinda/PE</h4>
+                    <p>Atuação em saraus e poesia instantânea, escrevendo e declamando poemas autorais, fortalecendo a cena literária da região.</p>
+                </div>
+                <div class="timeline-item reveal">
+                    <div class="ano">2014</div>
+                    <h4>Homenagem do Bloco Utopia da Paixão</h4>
+                    <p>Recebeu camisa estampada com os dizeres "Gilson Silva, o lirismo em nossos corações", reconhecimento da comunidade do carnaval lírico e da cultura popular.</p>
+                </div>
+                <div class="timeline-item reveal">
+                    <div class="ano">2015</div>
+                    <h4>Certificado "Lirismo nas Chaminés"</h4>
+                    <p>Reconhecimento público do BCL Flabelo Encantado pelos relevantes serviços prestados às agremiações e à cultura pernambucana, em Paulista/PE.</p>
+                </div>
+                <div class="timeline-item reveal">
+                    <div class="ano">2020s</div>
+                    <h4>Publicação do Livro "Poemas Acessos"</h4>
+                    <p>Projeto editorial autoral reunindo poemas de sentimentos, lembranças e reflexões sobre a vida e a sociedade, com design gráfico e produção literária própria.</p>
+                </div>
+                <div class="timeline-item reveal">
+                    <div class="ano">Atual</div>
+                    <h4>Rádio Online Rosas FM</h4>
+                    <p>Projeto autoral de web rádio dedicada à difusão de música pernambucana e cultura popular, com presença em agregadores e aplicativos de transmissão ao vivo.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== MÚSICA ===== -->
+    <section class="musica" id="musica">
+        <div class="container">
+            <div class="section-header reveal">
+                <span class="tag">Discografia</span>
+                <h2>Música e <span style="color: var(--amarelo);">Composição</span></h2>
+                <div class="divisor"></div>
+            </div>
+            <div class="cd-destaque">
+                <div class="cd-capa reveal">
+                    <div class="capa-placeholder">
+                        <i class="fas fa-compact-disc"></i>
+                        <div class="titulo-cd">Locomotiva do Frevo</div>
+                        <div class="subtitulo-cd">Vol. 2 — Maestro Nunes</div>
+                    </div>
+                </div>
+                <div class="cd-info reveal">
+                    <h3>Locomotiva do Frevo - Vol. 2</h3>
+                    <p>
+                        Participação especial no disco do <strong>Maestro Nunes</strong>, com 
+                        composições de sua autoria gravadas em registro histórico. O álbum 
+                        reúne 27 faixas de frevo de bloco e frevo canção, com capa e projeto 
+                        visual elaborados por Gilson Silva.
+                    </p>
+                    <p>
+                        <strong>Faixas de autoria de Gilson Silva:</strong>
+                    </p>
+                    <div class="faixas">
+                        <div class="faixa">
+                            <i class="fas fa-music"></i> 06 - Bêbado Teimoso
+                        </div>
+                        <div class="faixa">
+                            <i class="fas fa-music"></i> 19 - Deus Negro do Frevo
+                        </div>
+                    </div>
+                    <p style="margin-top: 25px; font-size: 0.85rem; color: var(--texto3);">
+                        <i class="fas fa-info-circle" style="color: var(--amarelo);"></i>
+                        CD de 2002 — Gravado no Recife/PE
+                    </p>
+                    <p style="margin-top: 15px; font-size: 0.85rem; color: var(--texto3);">
+                        <i class="fas fa-headphones" style="color: var(--amarelo);"></i>
+                        Músicas disponíveis em plataformas digitais (Spotify/YouTube)
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== BLOCOS ===== -->
+    <section class="blocos" id="blocos">
+        <div class="container">
+            <div class="section-header reveal">
+                <span class="tag">Carnaval e Patrimônio</span>
+                <h2>Blocos e <span style="color: var(--amarelo);">Agremiações</span></h2>
+                <div class="divisor"></div>
+                <p>Atuação na salvaguarda do carnaval tradicional, frevo de bloco e cultura popular</p>
+            </div>
+            <div class="blocos-grid">
+                <div class="bloco-card reveal">
+                    <div class="icone vermelho">
+                        <i class="fas fa-crown"></i>
+                    </div>
+                    <h3>Bloco Lírico Rosas da Boa Vista</h3>
+                    <p>
+                        Cofundador do bloco que se tornou referência na preservação do frevo 
+                        de bloco, das serenatas e do carnaval tradicional de rua. O bloco 
+                        realiza encontros de blocos líricos, apresentações em espaços públicos 
+                        e mantém viva a tradição do carnaval pernambucano.
+                    </p>
+                    <div class="detalhes">
+                        <span><i class="fas fa-calendar"></i> Fundado em 2003</span>
+                        <span><i class="fas fa-map-marker-alt"></i> Recife/PE</span>
+                        <span><i class="fas fa-music"></i> Frevo de Bloco</span>
+                    </div>
+                </div>
+                <div class="bloco-card reveal">
+                    <div class="icone azul">
+                        <i class="fas fa-drum"></i>
+                    </div>
+                    <h3>Troça Carnavalesca Mista Só Lamento</h3>
+                    <p>
+                        Criada em 2012 por Gilson Silva e familiares, a troça destaca-se 
+                        pelo boneco gigante e estandarte confeccionados artesanalmente pelo 
+                        proponente. A agremiação mantém viva a irreverência e a tradição 
+                        do carnaval de rua de Pernambuco.
+                    </p>
+                    <div class="detalhes">
+                        <span><i class="fas fa-calendar"></i> Fundada em 2012</span>
+                        <span><i class="fas fa-paint-brush"></i> Artesão e carnavalesco</span>
+                        <span><i class="fas fa-users"></i> Tradição familiar</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== LITERATURA ===== -->
+    <section class="literatura" id="literatura">
+        <div class="container">
+            <div class="section-header reveal">
+                <span class="tag">Poesia e Literatura</span>
+                <h2>Poemas <span style="color: var(--amarelo);">Autorais</span></h2>
+                <div class="divisor"></div>
+                <p>Produção poética e cordéis ao longo de mais de 30 anos de trajetória</p>
+            </div>
+            <div class="poemas-grid">
+                <div class="poema-card reveal">
+                    <div class="titulo-poema">Velhice</div>
+                    <div class="autor-poema">Gilson Silva</div>
+                    <div class="verso">
+O tempo passa,
+Enfraquece a biomassa,
+A infância ultrapassa,
+O passo descompassa,
+O cansaço senta praça
+A vista embaça;
+O rosto se amassa,
+A boemia escassa,
+A saudade transpassa,
+A saúde escarça,
+O cabelo esvoaça,
+Mas enfim, a vida é massa!
+                    </div>
+                    <div class="data-poema">
+                        <i class="fas fa-feather-alt"></i> Poema autoral
+                    </div>
+                </div>
+
+                <div class="poema-card reveal">
+                    <div class="titulo-poema">Terça-feira</div>
+                    <div class="autor-poema">Gilson Silva</div>
+                    <div class="verso">
+Terça, sem shopping,
+Sem hobby, sem feira.
+É dia dedicado a Marte,
+Entidade romana meieira.
+
+O caso de Vênus, do amor,
+O contrário de Ares, o forte,
+Pai do Medo e de Terror.
+O terceiro dia do azar e sorte.
+                    </div>
+                    <div class="data-poema">
+                        <i class="fas fa-feather-alt"></i> Poema autoral
+                    </div>
+                </div>
+
+                <div class="poema-card reveal">
+                    <div class="titulo-poema">Poesia</div>
+                    <div class="autor-poema">Gilson Silva</div>
+                    <div class="verso">
+Poesia é movimento
+É beijos por fora
+Desejos por dentro
+É nó que não se tora
+É cola que cola vento
+É choro que não se chora
+É riso de contentamento.
+É o amor que vai na tora
+Na busca dos cem por cento.
+É o relógio secundando as horas
+E nós jorrando sentimento.
+                    </div>
+                    <div class="data-poema">
+                        <i class="fas fa-feather-alt"></i> Poema autoral
+                    </div>
+                </div>
+
+                <div class="poema-card reveal">
+                    <div class="titulo-poema">Eu Tento</div>
+                    <div class="autor-poema">Gilson Silva</div>
+                    <div class="verso">
+Tento dizer o que foi feito poesia,
+Tento falar com o silêncio em grito,
+Tento ser ouvido e visão,
+Tento ser visto de dia.
+Trago em mim esse rito
+De sorrir sem sermão
+
+Tento ser positivo,
+Mesmo com o mundo em curto.
+Tento desagravar meus ouvidos
+Com rosas à João Pernambuco.
+Tento ser muito, sendo pouco,
+Tento ser passado vivido —
+Não mesmo, analógico.
+É lógico: sei ser louco.
+
+Tento compreender-te, vento,
+E preparar-me para a tempestade.
+Na verdade, tento ser atento,
+Maleável e duro,
+Mesmo sabendo da pouca acuidade
+Da visão de futuro.
+                    </div>
+                    <div class="data-poema">
+                        <i class="fas fa-feather-alt"></i> Manifesto poético
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== LIVRO ===== -->
+    <section class="livro" id="livro">
+        <div class="container">
+            <div class="section-header reveal">
+                <span class="tag">Obra Literária</span>
+                <h2>Livro <span style="color: var(--amarelo);">Poemas Acessos</span></h2>
+                <div class="divisor"></div>
+            </div>
+            <div class="livro-destaque">
+                <div class="livro-capa reveal">
+                    <div class="capa-livro">
+                        <div class="titulo-livro">Poemas Acessos</div>
+                        <div class="subtitulo-livro">Os versos retratam memórias</div>
+                        <div class="editora">Gilson Silva</div>
+                    </div>
+                    <div class="selo">✦ Lançamento ✦</div>
+                </div>
+                <div class="livro-info reveal">
+                    <h3>Sobre o autor e a obra</h3>
+                    <p>
+                        <strong>Gilson Silva</strong>, poeta, cordelista e compositor recifense, 
+                        tem sua escrita marcada pela cultura popular nordestina, pelo amor à 
+                        liberdade e pelo olhar crítico sobre a realidade brasileira. Seus versos 
+                        transitam entre lirismo, memória, humor, amor e denúncia social, 
+                        transformando o cotidiano em poesia.
+                    </p>
+                    <div class="sinopse">
+                        <p>
+                            "Poemas Acessos: Os versos retratam memórias reúne poemas de 
+                            sentimentos, lembranças e reflexões sobre a vida e a sociedade. 
+                            Entre o lirismo e a crítica social, Gilson Silva tece versos sobre 
+                            esperança, luta, amor e identidade. Uma poesia que nasce do 
+                            cotidiano e encontra, na palavra, memória, resistência e transformação."
+                        </p>
+                    </div>
+                    <p style="font-style: italic; color: var(--amarelo);">
+                        "Uma obra para ler, sentir e refletir."
+                    </p>
+                    <div class="livro-meta">
+                        <div class="meta-item">
+                            <i class="fas fa-book"></i> Poesia
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-language"></i> Português
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-barcode"></i> ISBN 978-65-00000-000-0
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== REDES SOCIAIS ===== -->
+    <section class="redes" id="redes">
+        <div class="container">
+            <div class="section-header reveal">
+                <span class="tag">Alcance Digital</span>
+                <h2>Redes <span style="color: var(--amarelo);">Sociais</span></h2>
+                <div class="divisor"></div>
+                <p>Acompanhe o trabalho de difusão cultural nas plataformas digitais</p>
+            </div>
+            <div class="redes-grid">
+                <a href="https://youtube.com/@gitopoeta" target="_blank" class="rede-card youtube reveal">
+                    <div class="rede-icone">
+                        <i class="fab fa-youtube"></i>
+                    </div>
+                    <h4>YouTube</h4>
+                    <div class="handle">@gitopoeta</div>
+                    <div class="stats">
+                        <span><i class="fas fa-users"></i> 1,37 mil inscritos</span>
+                    </div>
+                </a>
+                <a href="https://tiktok.com/@gilsonjspe" target="_blank" class="rede-card tiktok reveal">
+                    <div class="rede-icone">
+                        <i class="fab fa-tiktok"></i>
+                    </div>
+                    <h4>TikTok</h4>
+                    <div class="handle">@gilsonjspe</div>
+                    <div class="stats">
+                        <span><i class="fas fa-users"></i> 22,7 mil seguidores</span>
+                        <span><i class="fas fa-heart"></i> 255 mil curtidas</span>
+                    </div>
+                </a>
+                <a href="https://facebook.com/PoetasBrasileiros" target="_blank" class="rede-card facebook reveal">
+                    <div class="rede-icone">
+                        <i class="fab fa-facebook-f"></i>
+                    </div>
+                    <h4>Poetas Brasileiros</h4>
+                    <div class="handle">Página cultural</div>
+                    <div class="stats">
+                        <span><i class="fas fa-users"></i> 20 mil seguidores</span>
+                        <span><i class="fas fa-newspaper"></i> 506 posts</span>
+                    </div>
+                </a>
+                <a href="https://facebook.com/gilsonjspe" target="_blank" class="rede-card facebook reveal">
+                    <div class="rede-icone">
+                        <i class="fab fa-facebook-f"></i>
+                    </div>
+                    <h4>Gilson Silva</h4>
+                    <div class="handle">Perfil pessoal</div>
+                    <div class="stats">
+                        <span><i class="fas fa-users"></i> 24 seguidores</span>
+                        <span><i class="fas fa-newspaper"></i> 187 posts</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== RÁDIO ===== -->
+    <section class="radio" id="radio">
+        <div class="container">
+            <div class="section-header reveal">
+                <span class="tag">Projeto Autoral</span>
+                <h2>Rádio Online <span style="color: var(--amarelo);">Rosas FM</span></h2>
+                <div class="divisor"></div>
+            </div>
+            <div class="radio-container">
+                <div class="radio-info reveal">
+                    <h3>Minha Rádio Online Rosas</h3>
+                    <p>
+                        Plataforma de transmissão e difusão de música pernambucana e cultura popular, 
+                        com presença em agregadores e aplicativos de transmissão ao vivo como 
+                        Radiozin e Zeno FM. Um espaço dedicado à valorização dos ritmos 
+                        nordestinos: maracatu, frevo, coco, forró, cantoria, ciranda e MPB.
+                    </p>
+                    <p style="font-size: 0.9rem; color: var(--texto3);">
+                        <i class="fas fa-broadcast-tower" style="color: var(--amarelo);"></i>
+                        Transmissão 24 horas por dia
+                    </p>
+                </div>
+                <div class="radio-player reveal">
+                    <div class="radio-logo">
+                        <i class="fas fa-radio"></i>
+                    </div>
+                    <h4>Rádio Rosas FM</h4>
+                    <div class="frequencia">Paulista/PE — Cultura Popular</div>
+                    <button class="btn-radio" onclick="alert('🎵 A Rádio Rosas FM está disponível nos aplicativos Radiozin e Zeno FM. Procure por \'Rádio Rosas\' e ouça agora!')">
+                        <i class="fas fa-play"></i> Ouvir Agora
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== CONTATO ===== -->
+    <section class="contato" id="contato">
+        <div class="container">
+            <div class="section-header reveal">
+                <span class="tag">Fale Comigo</span>
+                <h2>Entre em <span style="color: var(--amarelo);">Contato</span></h2>
+                <div class="divisor"></div>
+            </div>
+            <div class="contato-grid">
+                <div class="contato-info reveal">
+                    <h3>Vamos conversar?</h3>
+                    <p>
+                        Para convites, parcerias culturais, apresentações, 
+                        aquisição do livro "Poemas Acessos" ou quaisquer 
+                        outras informações, entre em contato.
+                    </p>
+                    <div class="contato-item">
+                        <div class="icone-contato">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="texto-contato">
+                            <h4>E-mail</h4>
+                            <p>gitopoeta@gmail.com</p>
+                        </div>
+                    </div>
+                    <div class="contato-item">
+                        <div class="icone-contato">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div class="texto-contato">
+                            <h4>Localização</h4>
+                            <p>Recife / Paulista — Pernambuco, Brasil</p>
+                        </div>
+                    </div>
+                    <div class="contato-item">
+                        <div class="icone-contato">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="texto-contato">
+                            <h4>Disponibilidade</h4>
+                            <p>Segunda a sexta, das 9h às 18h</p>
+                        </div>
+                    </div>
+                </div>
+                <form class="contato-form reveal" onsubmit="event.preventDefault(); alert('Mensagem enviada com sucesso! Gito Poeta entrará em contato em breve.'); this.reset();">
+                    <div class="campo">
+                        <label for="nome">Seu nome</label>
+                        <input type="text" id="nome" placeholder="Como devo te chamar?" required>
+                    </div>
+                    <div class="campo">
+                        <label for="email">Seu e-mail</label>
+                        <input type="email" id="email" placeholder="seu@email.com" required>
+                    </div>
+                    <div class="campo">
+                        <label for="assunto">Assunto</label>
+                        <input type="text" id="assunto" placeholder="Sobre o que deseja falar?" required>
+                    </div>
+                    <div class="campo">
+                        <label for="mensagem">Mensagem</label>
+                        <textarea id="mensagem" placeholder="Escreva sua mensagem..." required></textarea>
+                    </div>
+                    <button type="submit" class="btn-enviar">
+                        <i class="fas fa-paper-plane"></i> Enviar Mensagem
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== FOOTER ===== -->
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-sobre">
+                <a href="#" class="logo">
+                    <i class="fas fa-feather-alt"></i>
+                    Gito Poeta
+                </a>
+                <p>
+                    Poeta, letrista, compositor e agitador cultural de Pernambuco. 
+                    Mais de três décadas dedicadas à salvaguarda, difusão e produção 
+                    da cultura popular pernambucana.
+                </p>
+                <div class="footer-social">
+                    <a href="https://youtube.com/@gitopoeta" target="_blank" aria-label="YouTube">
+                        <i class="fab fa-youtube"></i>
+                    </a>
+                    <a href="https://tiktok.com/@gilsonjspe" target="_blank" aria-label="TikTok">
+                        <i class="fab fa-tiktok"></i>
+                    </a>
+                    <a href="https://facebook.com/gilsonjspe" target="_blank" aria-label="Facebook">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="https://facebook.com/PoetasBrasileiros" target="_blank" aria-label="Poetas Brasileiros">
+                        <i class="fas fa-book-open"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h4>Navegação</h4>
+                <a href="#sobre">Sobre</a>
+                <a href="#trajetoria">Trajetória</a>
+                <a href="#musica">Música</a>
+                <a href="#blocos">Blocos</a>
+                <a href="#literatura">Literatura</a>
+                <a href="#livro">Livro</a>
+            </div>
+            <div class="footer-col">
+                <h4>Projetos</h4>
+                <a href="#radio">Rádio Rosas FM</a>
+                <a href="#redes">Redes Sociais</a>
+                <a href="#blocos">Rosas da Boa Vista</a>
+                <a href="#blocos">Só Lamento</a>
+                <a href="#contato">Contato</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>
+                &copy; 2025 <strong>Gilson Silva (Gito Poeta)</strong>. 
+                Todos os direitos reservados. | 
+                Feito com <i class="fas fa-heart" style="color: var(--vermelho);"></i> 
+                para a cultura popular pernambucana.
+            </p>
+        </div>
+    </footer>
+
+    <!-- ===== VOLTAR AO TOPO ===== -->
+    <button class="voltar-topo" id="voltarTopo" aria-label="Voltar ao topo">
+        <i class="fas fa-arrow-up"></i>
     </button>
-    <button class="aba-btn" onclick="trocarRede('instagram')" type="button">
-      📸 Instagram<span class="notificacao" id="badge-instagram" style="display:none">0</span>
-    </button>
-    <button class="aba-btn" onclick="trocarRede('youtube')" type="button">
-      ▶️ YouTube<span class="notificacao" id="badge-youtube" style="display:none">0</span>
-    </button>
-  </div>
 
-  <div class="numeros">
-    <div class="cartao">
-      <div class="cartao-titulo">👥 Seguidores</div>
-      <div class="cartao-numero" id="seguidores">24.5K</div>
-      <div class="cartao-variacao subiu" id="var-seguidores">▲ +2.4%</div>
-    </div>
-    <div class="cartao">
-      <div class="cartao-titulo">❤️ Curtidas</div>
-      <div class="cartao-numero" id="curtidas">1.2K</div>
-      <div class="cartao-variacao subiu" id="var-curtidas">▲ +12%</div>
-    </div>
-    <div class="cartao">
-      <div class="cartao-titulo">💬 Comentários</div>
-      <div class="cartao-numero" id="comentarios">342</div>
-      <div class="cartao-variacao subiu" id="var-comentarios">▲ +5.1%</div>
-    </div>
-    <div class="cartao">
-      <div class="cartao-titulo">🔄 Compartilhamentos</div>
-      <div class="cartao-numero" id="compartilhamentos">89</div>
-      <div class="cartao-variacao subiu" id="var-compartilhamentos">▲ +8.3%</div>
-    </div>
-  </div>
+    <!-- ===== JAVASCRIPT ===== -->
+    <script>
+        // ===== HEADER SCROLL =====
+        const header = document.getElementById('header');
+        const voltarTopo = document.getElementById('voltarTopo');
 
-  <div class="conteudo">
-    <div class="painel">
-      <div class="painel-titulo">
-        <span>📈 Crescimento (7 dias)</span>
-        <span>📊</span>
-      </div>
-      <div class="grafico-container">
-        <svg class="grafico-svg" id="grafico" viewBox="0 0 400 180" preserveAspectRatio="none">
-          <defs>
-            <linearGradient id="gradArea" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="var(--azul)" stop-opacity="0.3"/>
-              <stop offset="100%" stop-color="var(--azul)" stop-opacity="0"/>
-            </linearGradient>
-          </defs>
-          <g id="grade"></g>
-          <path id="area" class="area-grafico" fill="url(#gradArea)"/>
-          <path id="linha" class="linha-grafico" stroke="var(--azul)"/>
-          <g id="pontos"></g>
-        </svg>
-      </div>
-    </div>
-    <div class="painel">
-      <div class="painel-titulo">
-        <span>🔔 Atividade recente</span>
-        <span class="ao-vivo"><span class="bolinha"></span>Novo</span>
-      </div>
-      <div class="feed-lista" id="feed"></div>
-    </div>
-  </div>
-</div>
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 80) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
 
-<script>
-var redes = {
-  twitter: {
-    seguidores: 24500, curtidas: 1200, comentarios: 342, compartilhamentos: 89,
-    cor: "#3b82f6",
-    historico: [18000,19500,21000,20500,22000,23000,24500],
-    posts: [
-      {autor:"TechDaily",avatar:"TD",texto:"Novo update do algoritmo promete revolucionar o feed...",tempo:"2m",curtidas:234,comentarios:45,compartilhamentos:12},
-      {autor:"DesignHub",avatar:"DH",texto:"10 tendências de UI que você não pode ignorar em 2026",tempo:"15m",curtidas:189,comentarios:23,compartilhamentos:8},
-      {autor:"CodeLife",avatar:"CL",texto:"Thread: como otimizar suas queries em 3 passos simples",tempo:"1h",curtidas:567,comentarios:89,compartilhamentos:45}
-    ]
-  },
-  instagram: {
-    seguidores: 45100, curtidas: 3400, comentarios: 156, compartilhamentos: 234,
-    cor: "#ef4444",
-    historico: [38000,39500,41000,40500,42000,43500,45100],
-    posts: [
-      {autor:"fotografia_br",avatar:"FB",texto:"Golden hour em São Paulo 🌇 #photography",tempo:"5m",curtidas:1203,comentarios:34,compartilhamentos:12},
-      {autor:"foodie_rj",avatar:"FR",texto:"Receita de hoje: risoto de limão siciliano",tempo:"32m",curtidas:892,comentarios:56,compartilhamentos:8},
-      {autor:"travel.world",avatar:"TW",texto:"Patagônia é surreal 😍",tempo:"2h",curtidas:2341,comentarios:89,compartilhamentos:45}
-    ]
-  },
-  youtube: {
-    seguidores: 128000, curtidas: 5600, comentarios: 890, compartilhamentos: 120,
-    cor: "#22c55e",
-    historico: [110000,115000,118000,120000,122000,125000,128000],
-    posts: [
-      {autor:"CanalTech",avatar:"CT",texto:"Review completo: o novo gadget que promete mudar tudo",tempo:"10m",curtidas:3400,comentarios:234,compartilhamentos:56},
-      {autor:"DevSampa",avatar:"DS",texto:"Tutorial: construindo uma API em 15 minutos",tempo:"45m",curtidas:1200,comentarios:89,compartilhamentos:23},
-      {autor:"CulináriaFácil",avatar:"CF",texto:"3 receitas de café da manhã em 5 minutos",tempo:"3h",curtidas:5600,comentarios:123,compartilhamentos:45}
-    ]
-  }
-};
+            if (window.scrollY > 500) {
+                voltarTopo.classList.add('visivel');
+            } else {
+                voltarTopo.classList.remove('visivel');
+            }
+        });
 
-var redeAtual = "twitter";
-var segundos = 0;
+        // ===== MENU MOBILE =====
+        const menuToggle = document.getElementById('menuToggle');
+        const nav = document.getElementById('nav');
 
-function formatarNumero(num) {
-  if (num >= 1000000) return (num/1000000).toFixed(1)+"M";
-  if (num >= 1000) return (num/1000).toFixed(1)+"K";
-  return num.toString();
-}
+        menuToggle.addEventListener('click', () => {
+            nav.classList.toggle('aberto');
+            const icon = menuToggle.querySelector('i');
+            if (nav.classList.contains('aberto')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        });
 
-function animarNumero(id, inicio, fim, duracao) {
-  var el = document.getElementById(id);
-  var diff = fim - inicio;
-  var inicioT = performance.now();
-  function atualizar(t) {
-    var p = Math.min((t - inicioT)/duracao, 1);
-    var s = 1 - Math.pow(1-p, 3);
-    el.textContent = formatarNumero(Math.floor(inicio + diff*s));
-    if (p < 1) requestAnimationFrame(atualizar);
-  }
-  requestAnimationFrame(atualizar);
-}
+        // Fechar menu ao clicar em um link
+        nav.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                nav.classList.remove('aberto');
+                const icon = menuToggle.querySelector('i');
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            });
+        });
 
-function desenharGrafico(rede) {
-  var dados = redes[rede].historico;
-  var W = 400, H = 180, M = 20;
-  var max = Math.max.apply(null, dados)*1.1;
-  var min = Math.min.apply(null, dados)*0.9;
-  var pts = [];
-  for (var i=0; i<dados.length; i++) {
-    var x = M + (i/(dados.length-1))*(W-M*2);
-    var y = H - M - ((dados[i]-min)/(max-min))*(H-M*2);
-    pts.push([x,y]);
-  }
-  var grade = document.getElementById("grade");
-  grade.innerHTML = "";
-  for (var i=0; i<=4; i++) {
-    var y = M + (i/4)*(H-M*2);
-    var ln = document.createElementNS("http://www.w3.org/2000/svg","line");
-    ln.setAttribute("x1",M); ln.setAttribute("y1",y);
-    ln.setAttribute("x2",W-M); ln.setAttribute("y2",y);
-    ln.setAttribute("class","grade-grafico");
-    grade.appendChild(ln);
-  }
-  var pathL = "";
-  for (var i=0; i<pts.length; i++) {
-    pathL += (i===0?"M":"L") + pts[i][0] + "," + pts[i][1];
-  }
-  document.getElementById("linha").setAttribute("d",pathL);
-  document.getElementById("linha").setAttribute("stroke",redes[rede].cor);
-  var pathA = pathL + " L"+pts[pts.length-1][0]+","+(H-M)+" L"+pts[0][0]+","+(H-M)+" Z";
-  document.getElementById("area").setAttribute("d",pathA);
-  var g = document.getElementById("pontos");
-  g.innerHTML = "";
-  for (var i=0; i<pts.length; i++) {
-    var c = document.createElementNS("http://www.w3.org/2000/svg","circle");
-    c.setAttribute("cx",pts[i][0]); c.setAttribute("cy",pts[i][1]);
-    c.setAttribute("class","ponto-grafico");
-    c.setAttribute("stroke",redes[rede].cor);
-    var tt = document.createElementNS("http://www.w3.org/2000/svg","title");
-    tt.textContent = formatarNumero(dados[i]);
-    c.appendChild(tt); g.appendChild(c);
-  }
-}
+        // ===== VOLTAR AO TOPO =====
+        voltarTopo.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
 
-function mostrarFeed(rede) {
-  var lista = document.getElementById("feed");
-  lista.innerHTML = "";
-  for (var i=0; i<redes[rede].posts.length; i++) {
-    var post = redes[rede].posts[i];
-    var item = document.createElement("div");
-    item.className = "feed-item" + (i===0?" novo":"");
-    item.innerHTML = 
-      '<div class="feed-cabecalho">'+
-        '<div class="feed-avatar">'+post.avatar+'</div>'+
-        '<div>'+
-          '<div class="feed-autor">'+post.autor+'</div>'+
-          '<div class="feed-tempo">'+post.tempo+'</div>'+
-        '</div>'+
-      '</div>'+
-      '<div class="feed-texto">'+post.texto+'</div>'+
-      '<div class="feed-stats">'+
-        '<span>❤️ '+formatarNumero(post.curtidas)+'</span>'+
-        '<span>💬 '+post.comentarios+'</span>'+
-        '<span>🔄 '+post.compartilhamentos+'</span>'+
-      '</div>';
-    lista.appendChild(item);
-  }
-}
+        // ===== SCROLL REVEAL =====
+        const revealElements = document.querySelectorAll('.reveal');
 
-function trocarRede(rede) {
-  redeAtual = rede;
-  var btns = document.querySelectorAll(".aba-btn");
-  for (var i=0; i<btns.length; i++) {
-    btns[i].classList.remove("ativa");
-    if (btns[i].getAttribute("onclick").indexOf("'"+rede+"'") > -1) {
-      btns[i].classList.add("ativa");
-    }
-  }
-  var r = redes[rede];
-  document.getElementById("seguidores").textContent = formatarNumero(r.seguidores);
-  document.getElementById("curtidas").textContent = formatarNumero(r.curtidas);
-  document.getElementById("comentarios").textContent = formatarNumero(r.comentarios);
-  document.getElementById("compartilhamentos").textContent = formatarNumero(r.compartilhamentos);
-  document.getElementById("seguidores").dataset.valor = r.seguidores;
-  document.getElementById("curtidas").dataset.valor = r.curtidas;
-  document.getElementById("comentarios").dataset.valor = r.comentarios;
-  document.getElementById("compartilhamentos").dataset.valor = r.compartilhamentos;
-  desenharGrafico(rede);
-  mostrarFeed(rede);
-}
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('ativo');
+                }
+            });
+        }, {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        });
 
-function atualizarNumeros() {
-  var r = redes[redeAtual];
-  var antigos = {
-    seguidores: parseInt(document.getElementById("seguidores").dataset.valor||r.seguidores),
-    curtidas: parseInt(document.getElementById("curtidas").dataset.valor||r.curtidas),
-    comentarios: parseInt(document.getElementById("comentarios").dataset.valor||r.comentarios),
-    compartilhamentos: parseInt(document.getElementById("compartilhamentos").dataset.valor||r.compartilhamentos)
-  };
-  r.seguidores += Math.floor(Math.random()*40)+5;
-  r.curtidas += Math.floor(Math.random()*25)+3;
-  r.comentarios += Math.floor(Math.random()*6)+1;
-  r.compartilhamentos += Math.floor(Math.random()*4);
-  r.historico.shift(); r.historico.push(r.seguidores);
-  animarNumero("seguidores",antigos.seguidores,r.seguidores,700);
-  animarNumero("curtidas",antigos.curtidas,r.curtidas,700);
-  animarNumero("comentarios",antigos.comentarios,r.comentarios,700);
-  animarNumero("compartilhamentos",antigos.compartilhamentos,r.compartilhamentos,700);
-  document.getElementById("seguidores").dataset.valor = r.seguidores;
-  document.getElementById("curtidas").dataset.valor = r.curtidas;
-  document.getElementById("comentarios").dataset.valor = r.comentarios;
-  document.getElementById("compartilhamentos").dataset.valor = r.compartilhamentos;
-  var vars = [
-    {id:"var-seguidores",max:5},{id:"var-curtidas",max:15},
-    {id:"var-comentarios",max:8},{id:"var-compartilhamentos",max:10}
-  ];
-  for (var i=0; i<vars.length; i++) {
-    var el = document.getElementById(vars[i].id);
-    var up = Math.random()>0.25;
-    var val = (Math.random()*vars[i].max).toFixed(1);
-    el.className = "cartao-variacao " + (up?"subiu":"caiu");
-    el.textContent = (up?"▲ +":"▼ -")+val+"%";
-  }
-  desenharGrafico(redeAtual);
-}
+        revealElements.forEach(el => {
+            revealObserver.observe(el);
+        });
 
-function adicionarPost() {
-  var r = redes[redeAtual];
-  var autores = ["UserOne","TechGuru","CreativeLab","NewsBr","DevTeam","DesignPro"];
-  var textos = [
-    "Acabei de publicar um novo artigo sobre tendências tech! 🚀",
-    "Alguém mais está animado para o lançamento de amanhã?",
-    "Dica rápida: use sempre semântica HTML correta.",
-    "Novo projeto no ar! Feedback é bem-vindo 💬",
-    "Thread sobre otimização de performance 🧵",
-    "Qual framework vocês estão usando em 2026?"
-  ];
-  var np = {
-    autor: autores[Math.floor(Math.random()*autores.length)],
-    avatar: autores[Math.floor(Math.random()*autores.length)].substring(0,2).toUpperCase(),
-    texto: textos[Math.floor(Math.random()*textos.length)],
-    tempo: "agora",
-    curtidas: Math.floor(Math.random()*80)+10,
-    comentarios: Math.floor(Math.random()*15)+1,
-    compartilhamentos: Math.floor(Math.random()*8)
-  };
-  r.posts.unshift(np);
-  if (r.posts.length>5) r.posts.pop();
-  mostrarFeed(redeAtual);
-  var b = document.getElementById("badge-"+redeAtual);
-  b.textContent = parseInt(b.textContent||0)+1;
-  b.style.display = "inline-flex";
-}
+        // ===== SMOOTH SCROLL PARA ÂNCORAS =====
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    const offsetTop = target.offsetTop - 80;
+                    window.scrollTo({
+                        top: offsetTop,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
 
-trocarRede("twitter");
+        // ===== ANIMAÇÃO DE NÚMEROS =====
+        const numeros = document.querySelectorAll('.numero-item .num');
+        let numerosAnimados = false;
 
-setInterval(function(){
-  atualizarNumeros();
-  if (Math.random()>0.5) adicionarPost();
-  segundos = 0;
-}, 5000);
+        const animarNumeros = () => {
+            if (numerosAnimados) return;
+            const sectionNumeros = document.querySelector('.numeros');
+            if (!sectionNumeros) return;
 
-setInterval(function(){
-  segundos++;
-  document.getElementById("segundos").textContent = segundos;
-}, 1000);
-</script>
+            const rect = sectionNumeros.getBoundingClientRect();
+            if (rect.top < window.innerHeight && rect.bottom > 0) {
+                numerosAnimados = true;
+                numeros.forEach(num => {
+                    const texto = num.textContent;
+                    const match = texto.match(/([\d,]+)/);
+                    if (match) {
+                        const valorFinal = parseFloat(match[1].replace(',', '.'));
+                        const temVirgula = match[1].includes(',');
+                        const sufixo = texto.replace(match[1], '').trim();
+                        let atual = 0;
+                        const incremento = valorFinal / 50;
+                        const timer = setInterval(() => {
+                            atual += incremento;
+                            if (atual >= valorFinal) {
+                                atual = valorFinal;
+                                clearInterval(timer);
+                            }
+                            if (temVirgula) {
+                                num.textContent = atual.toFixed(1).replace('.', ',') + sufixo;
+                            } else {
+                                num.textContent = Math.floor(atual) + sufixo;
+                            }
+                        }, 30);
+                    }
+                });
+            }
+        };
+
+        window.addEventListener('scroll', animarNumeros);
+        window.addEventListener('load', animarNumeros);
+
+        // ===== CONSOLE =====
+        console.log('%c🎭 Gito Poeta | Gilson Silva', 'font-size: 20px; font-weight: bold; color: #f7d117;');
+        console.log('%cPoeta, compositor e agitador cultural de Pernambuco', 'font-size: 12px; color: #b0b0c0;');
+        console.log('%c✦ Mais de 30 anos de cultura popular ✦', 'font-size: 12px; color: #c8102e;');
+    </script>
+
 </body>
 </html>
