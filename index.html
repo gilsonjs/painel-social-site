@@ -51,7 +51,6 @@
             overflow-x: hidden;
         }
 
-        /* ===== SCROLLBAR ===== */
         ::-webkit-scrollbar {
             width: 10px;
         }
@@ -66,13 +65,11 @@
             background: var(--amarelo);
         }
 
-        /* ===== SELEÇÃO ===== */
         ::selection {
             background: var(--amarelo);
             color: #000;
         }
 
-        /* ===== HEADER ===== */
         header {
             position: fixed;
             top: 0;
@@ -160,7 +157,6 @@
             cursor: pointer;
         }
 
-        /* ===== HERO ===== */
         .hero {
             min-height: 100vh;
             display: flex;
@@ -306,7 +302,6 @@
             }
         }
 
-        /* ===== SEÇÕES ===== */
         section {
             padding: 100px 40px;
             position: relative;
@@ -355,7 +350,6 @@
             border-radius: 2px;
         }
 
-        /* ===== SOBRE ===== */
         .sobre {
             background: var(--fundo2);
         }
@@ -465,7 +459,6 @@
             background: rgba(247, 209, 23, 0.05);
         }
 
-        /* ===== NÚMEROS ===== */
         .numeros {
             background: var(--fundo);
             padding: 60px 40px;
@@ -516,7 +509,6 @@
             letter-spacing: 1px;
         }
 
-        /* ===== TRAJETÓRIA ===== */
         .trajetoria {
             background: var(--fundo2);
         }
@@ -578,7 +570,6 @@
             font-weight: 300;
         }
 
-        /* ===== MÚSICA ===== */
         .musica {
             background: var(--fundo);
         }
@@ -700,7 +691,6 @@
             font-size: 0.75rem;
         }
 
-        /* ===== BLOCOS ===== */
         .blocos {
             background: var(--fundo2);
         }
@@ -763,10 +753,6 @@
             background: var(--gradiente2);
         }
 
-        .bloco-card .icone.roxo {
-            background: var(--gradiente3);
-        }
-
         .bloco-card h3 {
             font-family: 'Playfair Display', serif;
             font-size: 1.5rem;
@@ -799,7 +785,6 @@
             color: var(--amarelo);
         }
 
-        /* ===== LITERATURA ===== */
         .literatura {
             background: var(--fundo);
         }
@@ -862,11 +847,6 @@
             white-space: pre-line;
         }
 
-        .poema-card .verso strong {
-            color: var(--amarelo);
-            font-style: normal;
-        }
-
         .poema-card .data-poema {
             margin-top: 25px;
             padding-top: 20px;
@@ -882,7 +862,6 @@
             color: var(--vermelho);
         }
 
-        /* ===== LIVRO ===== */
         .livro {
             background: var(--fundo2);
         }
@@ -896,64 +875,29 @@
 
         .livro-capa {
             position: relative;
+            max-width: 380px;
+            margin: 0 auto;
         }
 
         .livro-capa .capa-livro {
             width: 100%;
             aspect-ratio: 2/3;
-            border-radius: 10px;
-            background: linear-gradient(135deg, #2a1a0a, #4a2a10, #2a1a0a);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-            position: relative;
+            border-radius: 12px;
             overflow: hidden;
-            border: 1px solid rgba(247, 209, 23, 0.2);
-        }
-
-        .livro-capa .capa-livro::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: 
-                radial-gradient(circle at 20% 20%, rgba(247, 209, 23, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(200, 16, 46, 0.1) 0%, transparent 50%);
-        }
-
-        .livro-capa .capa-livro .titulo-livro {
-            font-family: 'Playfair Display', serif;
-            font-size: 2rem;
-            color: var(--amarelo);
-            text-align: center;
-            padding: 0 30px;
+            box-shadow: 0 25px 70px rgba(200, 16, 46, 0.4), 0 10px 30px rgba(0,0,0,0.6);
+            transition: transform 0.5s;
             position: relative;
-            z-index: 1;
         }
 
-        .livro-capa .capa-livro .subtitulo-livro {
-            font-size: 0.9rem;
-            color: var(--texto2);
-            margin-top: 15px;
-            text-align: center;
-            padding: 0 30px;
-            position: relative;
-            z-index: 1;
-            font-style: italic;
+        .livro-capa .capa-livro img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
         }
 
-        .livro-capa .capa-livro .editora {
-            position: absolute;
-            bottom: 30px;
-            font-size: 0.75rem;
-            color: var(--texto3);
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            z-index: 1;
+        .livro-capa:hover .capa-livro {
+            transform: translateY(-10px) rotate(-2deg);
         }
 
         .livro-capa .selo {
@@ -1019,7 +963,6 @@
             font-size: 1rem;
         }
 
-        /* ===== REDES SOCIAIS ===== */
         .redes {
             background: var(--fundo);
         }
@@ -1122,7 +1065,6 @@
             color: var(--texto3);
         }
 
-        /* ===== RÁDIO ===== */
         .radio {
             background: var(--fundo2);
         }
@@ -1224,7 +1166,6 @@
             box-shadow: 0 10px 30px rgba(0, 166, 81, 0.4);
         }
 
-        /* ===== CONTATO ===== */
         .contato {
             background: var(--fundo);
         }
@@ -1343,7 +1284,6 @@
             box-shadow: 0 10px 30px rgba(200, 16, 46, 0.4);
         }
 
-        /* ===== FOOTER ===== */
         footer {
             background: var(--fundo2);
             padding: 60px 40px 30px;
@@ -1431,7 +1371,6 @@
             color: var(--amarelo);
         }
 
-        /* ===== VOLTAR AO TOPO ===== */
         .voltar-topo {
             position: fixed;
             bottom: 30px;
@@ -1464,7 +1403,6 @@
             box-shadow: 0 10px 30px rgba(200, 16, 46, 0.6);
         }
 
-        /* ===== ANIMAÇÕES DE SCROLL ===== */
         .reveal {
             opacity: 0;
             transform: translateY(40px);
@@ -1476,7 +1414,6 @@
             transform: translateY(0);
         }
 
-        /* ===== RESPONSIVO ===== */
         @media (max-width: 1024px) {
             .sobre-grid {
                 grid-template-columns: 1fr;
@@ -1503,7 +1440,7 @@
             }
 
             .livro-capa {
-                max-width: 350px;
+                max-width: 320px;
                 margin: 0 auto;
             }
 
@@ -1645,7 +1582,6 @@
 </head>
 <body>
 
-    <!-- ===== HEADER ===== -->
     <header id="header">
         <a href="#" class="logo">
             <i class="fas fa-feather-alt"></i>
@@ -1667,7 +1603,6 @@
         </button>
     </header>
 
-    <!-- ===== HERO ===== -->
     <section class="hero" id="inicio">
         <div class="hero-content">
             <span class="hero-badge">✦ Cultura Popular Pernambucana ✦</span>
@@ -1684,14 +1619,13 @@
                 <a href="#sobre" class="btn btn-primary">
                     <i class="fas fa-user"></i> Conheça minha história
                 </a>
-                <a href="#literatura" class="btn btn-outline">
-                    <i class="fas fa-book-open"></i> Ler poesias
+                <a href="#livro" class="btn btn-outline">
+                    <i class="fas fa-book-open"></i> Meu livro
                 </a>
             </div>
         </div>
     </section>
 
-    <!-- ===== NÚMEROS ===== -->
     <section class="numeros">
         <div class="container">
             <div class="numeros-grid">
@@ -1719,7 +1653,6 @@
         </div>
     </section>
 
-    <!-- ===== SOBRE ===== -->
     <section class="sobre" id="sobre">
         <div class="container">
             <div class="section-header reveal">
@@ -1776,7 +1709,6 @@
         </div>
     </section>
 
-    <!-- ===== TRAJETÓRIA ===== -->
     <section class="trajetoria" id="trajetoria">
         <div class="container">
             <div class="section-header reveal">
@@ -1835,7 +1767,6 @@
         </div>
     </section>
 
-    <!-- ===== MÚSICA ===== -->
     <section class="musica" id="musica">
         <div class="container">
             <div class="section-header reveal">
@@ -1883,7 +1814,6 @@
         </div>
     </section>
 
-    <!-- ===== BLOCOS ===== -->
     <section class="blocos" id="blocos">
         <div class="container">
             <div class="section-header reveal">
@@ -1931,7 +1861,6 @@
         </div>
     </section>
 
-    <!-- ===== LITERATURA ===== -->
     <section class="literatura" id="literatura">
         <div class="container">
             <div class="section-header reveal">
@@ -2038,7 +1967,6 @@ Da visão de futuro.
         </div>
     </section>
 
-    <!-- ===== LIVRO ===== -->
     <section class="livro" id="livro">
         <div class="container">
             <div class="section-header reveal">
@@ -2049,9 +1977,7 @@ Da visão de futuro.
             <div class="livro-destaque">
                 <div class="livro-capa reveal">
                     <div class="capa-livro">
-                        <div class="titulo-livro">Poemas Acessos</div>
-                        <div class="subtitulo-livro">Os versos retratam memórias</div>
-                        <div class="editora">Gilson Silva</div>
+                        <img src="capa-livro.jpg" alt="Capa do livro Poemas Acessos - Gito Poeta">
                     </div>
                     <div class="selo">✦ Lançamento ✦</div>
                 </div>
@@ -2092,7 +2018,6 @@ Da visão de futuro.
         </div>
     </section>
 
-    <!-- ===== REDES SOCIAIS ===== -->
     <section class="redes" id="redes">
         <div class="container">
             <div class="section-header reveal">
@@ -2149,7 +2074,6 @@ Da visão de futuro.
         </div>
     </section>
 
-    <!-- ===== RÁDIO ===== -->
     <section class="radio" id="radio">
         <div class="container">
             <div class="section-header reveal">
@@ -2185,7 +2109,6 @@ Da visão de futuro.
         </div>
     </section>
 
-    <!-- ===== CONTATO ===== -->
     <section class="contato" id="contato">
         <div class="container">
             <div class="section-header reveal">
@@ -2254,7 +2177,6 @@ Da visão de futuro.
         </div>
     </section>
 
-    <!-- ===== FOOTER ===== -->
     <footer>
         <div class="footer-grid">
             <div class="footer-sobre">
@@ -2310,14 +2232,11 @@ Da visão de futuro.
         </div>
     </footer>
 
-    <!-- ===== VOLTAR AO TOPO ===== -->
     <button class="voltar-topo" id="voltarTopo" aria-label="Voltar ao topo">
         <i class="fas fa-arrow-up"></i>
     </button>
 
-    <!-- ===== JAVASCRIPT ===== -->
     <script>
-        // ===== HEADER SCROLL =====
         const header = document.getElementById('header');
         const voltarTopo = document.getElementById('voltarTopo');
 
@@ -2335,7 +2254,6 @@ Da visão de futuro.
             }
         });
 
-        // ===== MENU MOBILE =====
         const menuToggle = document.getElementById('menuToggle');
         const nav = document.getElementById('nav');
 
@@ -2351,7 +2269,6 @@ Da visão de futuro.
             }
         });
 
-        // Fechar menu ao clicar em um link
         nav.querySelectorAll('a').forEach(link => {
             link.addEventListener('click', () => {
                 nav.classList.remove('aberto');
@@ -2361,12 +2278,10 @@ Da visão de futuro.
             });
         });
 
-        // ===== VOLTAR AO TOPO =====
         voltarTopo.addEventListener('click', () => {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
 
-        // ===== SCROLL REVEAL =====
         const revealElements = document.querySelectorAll('.reveal');
 
         const revealObserver = new IntersectionObserver((entries) => {
@@ -2384,7 +2299,6 @@ Da visão de futuro.
             revealObserver.observe(el);
         });
 
-        // ===== SMOOTH SCROLL PARA ÂNCORAS =====
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function(e) {
                 e.preventDefault();
@@ -2399,7 +2313,6 @@ Da visão de futuro.
             });
         });
 
-        // ===== ANIMAÇÃO DE NÚMEROS =====
         const numeros = document.querySelectorAll('.numero-item .num');
         let numerosAnimados = false;
 
@@ -2440,7 +2353,6 @@ Da visão de futuro.
         window.addEventListener('scroll', animarNumeros);
         window.addEventListener('load', animarNumeros);
 
-        // ===== CONSOLE =====
         console.log('%c🎭 Gito Poeta | Gilson Silva', 'font-size: 20px; font-weight: bold; color: #f7d117;');
         console.log('%cPoeta, compositor e agitador cultural de Pernambuco', 'font-size: 12px; color: #b0b0c0;');
         console.log('%c✦ Mais de 30 anos de cultura popular ✦', 'font-size: 12px; color: #c8102e;');
