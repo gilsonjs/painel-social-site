@@ -2166,7 +2166,8 @@ Da visão de futuro.
                     </div>
                 </div>
                 <!-- INÍCIO DO FORMULÁRIO CORRIGIDO -->
-            <form class="contato-form" action="https://formspree.io/f/xdekydwk" method="POST">
+        <!-- INÍCIO DO FORMULÁRIO COM IMAGEM E VISUAL ORIGINAL -->
+            <form class="contato-form reveal" action="https://formspree.io/f/xdekydwk" method="POST" enctype="multipart/form-data">
                 
                 <div class="campo">
                     <label for="nome">Seu nome</label>
@@ -2183,6 +2184,12 @@ Da visão de futuro.
                     <input type="text" id="assunto" name="subject" placeholder="Sobre o que deseja falar?">
                 </div>
 
+                <!-- NOVO CAMPO PARA ENVIAR IMAGEM OU ARQUIVO -->
+                <div class="campo">
+                    <label for="arquivo">Enviar Imagem ou Documento (Máx: 1MB)</label>
+                    <input type="file" id="arquivo" name="upload" accept="image/*,.pdf">
+                </div>
+
                 <div class="campo">
                     <label for="mensagem">Mensagem</label>
                     <textarea id="mensagem" name="message" placeholder="Escreva sua mensagem..." rows="5" required></textarea>
@@ -2191,7 +2198,7 @@ Da visão de futuro.
                 <button type="submit">Enviar Mensagem</button>
 
             </form>
-            <!-- FIM DO FORMULÁRIO CORRIGIDO -->            </div>
+            <!-- FIM DO FORMULÁRIO -->            <!-- FIM DO FORMULÁRIO CORRIGIDO -->            </div>
         </div>
     </section>
 
